@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="navbar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Website - Navigation Bar</title>
+    <link rel="icon" type="images/png" href="images/carlogo.png">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        /* Updated Navbar Styling */
+        header {
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        header .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8em;
+        }
+
+        header .logo span {
+            font-weight: bold;
+            color: #f90;
+        }
+
+        header .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        header .nav-links li {
+            margin: 0 15px;
+        }
+
+        header .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+
+        header .nav-links a:hover {
+            color: #f90;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+        }
+
+        .search-bar button {
+            padding: 5px 15px;
+            border: none;
+            background: #f90;
+            color: #fff;
+            font-size: 1em;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background: #e68a00;
+        }
+        
+        /* Styling for .navbar-nav */
+    .navbar-nav {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        flex-wrap: wrap;
+        color: #fff;
+    }
+
+    .navbar-nav .nav-item {
+        margin: 0 10px;
+        font-size: 1em;
+        color: #fff;
+    }
+
+    .navbar-nav .nav-item span {
+        font-weight: bold;
+        color: #f90;
+    }
+
+    .navbar-nav .nav-link {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1em;
+        margin-left: 15px;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: #f90;
+    }
+	
+	 /* Responsive Styles */
+        @media (max-width: 768px) {
+            header .nav-links {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero-content h1 {
+                font-size: 2em;
+            }
+
+            .hero-content p {
+                font-size: 1em;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-sections {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+        }
+		</style>
+		</head>
+<body>
+
+    <header>
+    
+        <div class="logo">
+            <a href="/Dashboard">Car<span>Dealings</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/Dashboard">Home</a></li>
+            <li><a href="/cars">Car Listings</a></li>
+            <li><a href="/dealers-list">Dealers</a></li>
+            <!--  <li><a href="/account">My Account</a></li>-->
+            <li><a href="/contact">Contact</a></li>
+            <li><a th:href="@{/view-purchase(email=${email})}">View Purchase</a></li>
+            
+        </ul>
+        <div class="search-bar">
+            <form action="/cars/search" method="get">
+
+                <input type="text" name="query" placeholder="Search for cars..." />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                Welcome <span th:text="${email}">User Email</span>
+            </li>
+            
+            <li class="nav-item">
+                <a href="/login" class="nav-link">Login</a>
+            </li>
+            <li class="nav-item">
+                <a href="/logout" class="nav-link">Logout</a>
+            </li>
+        </ul>
+    </header>
+	</body>
+	
+ </div>
+</html>

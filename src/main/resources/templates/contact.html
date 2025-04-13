@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+           /* Updated Navbar Styling - One line layout */
+        header {
+            background: linear-gradient(135deg, #333 0%, #222 100%);
+            color: #fff;
+            padding: 0 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 70px; /* Fixed height for navbar */
+        }
+
+        header .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        header .logo a:hover {
+            text-shadow: 0 0 10px rgba(255,153,0,0.7);
+        }
+
+        header .logo span {
+            font-weight: bold;
+            color: #f90;
+        }
+
+        header .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        header .nav-links li {
+            margin: 0 15px;
+        }
+
+        header .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        header .nav-links a:hover {
+            color: #f90;
+        }
+
+        header .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        header .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+        }
+
+        .search-bar form {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            width: 180px;
+            transition: all 0.3s ease;
+            margin: 0;
+            height: 20px;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #f90;
+            box-shadow: 0 0 5px rgba(255,153,0,0.3);
+        }
+
+        .search-bar button {
+            padding: 8px 16px;
+            border: none;
+            background: linear-gradient(to right, #f90, #ff7e00);
+            color: #fff;
+            font-size: 1em;
+            font-weight: 500;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            height: 36px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar button:hover {
+            background: linear-gradient(to right, #ff7e00, #f90);
+            box-shadow: 0 0 10px rgba(255,153,0,0.5);
+        }
+        
+        /* Styling for user dropdown */
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            font-size: 0.95em;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-toggle:hover {
+            background-color: rgba(255, 153, 0, 0.3);
+        }
+
+	        /* Update this CSS rule in the style section */
+		.dropdown-toggle span {
+		    font-weight: bold;
+		    color: #f90;
+		    margin: 0 5px;
+		    max-width: 250px; /* Increased significantly to fit longer email addresses */
+		    white-space: nowrap;
+		    overflow: visible; /* Changed from hidden to visible */
+		    text-overflow: clip; /* Changed from ellipsis to clip */
+		}
+	
+		/* You might also want to adjust the user-dropdown container */
+		.user-dropdown {
+		    position: relative;
+		    display: inline-block;
+		    margin-left: 15px;
+		    min-width: 200px; /* Add minimum width to ensure space */
+		}
+        .dropdown-toggle i {
+            margin-left: 5px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            min-width: 120px;
+            z-index: 1001;
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f5f5f5;
+            color: #f90;
+        }
+
+        .dropdown-menu a i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+
+        .content {
+            margin: 40px 20px;
+            flex: 1; /* Pushes the footer to the bottom */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to bottom, #6c63ff, #554ad3);
+        }
+
+        .contact-image img {
+            width: 280px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .contact-image img:hover {
+            transform: scale(1.05);
+        }
+
+        .contact-form {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .contact-form h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #333;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .contact-form h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: #6c63ff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 12px;
+            top: 14px;
+            color: #6c63ff;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            margin-bottom: 0;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: #6c63ff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+        }
+
+        .contact-form textarea {
+            resize: none;
+            height: 120px;
+        }
+
+        .contact-form button {
+            width: 100%;
+            background-color: #6c63ff;
+            color: #fff;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(108, 99, 255, 0.3);
+        }
+
+        .contact-form button:hover {
+            background-color: #554ad3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(108, 99, 255, 0.4);
+        }
+
+        .contact-form button i {
+            font-size: 18px;
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .contact-container {
+                flex-direction: column;
+                padding: 30px;
+            }
+
+            .contact-container::before {
+                width: 100%;
+                height: 6px;
+                top: 0;
+                left: 0;
+            }
+
+            .contact-image img {
+                width: 200px;
+                margin-bottom: 20px;
+            }
+
+            .contact-form {
+                padding: 0;
+            }
+        }
+
+        /* Add a subtle background pattern */
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#6c63ff 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+                /* Footer - Enhanced */
+        footer {
+            background: linear-gradient(135deg, #333 0%, #222 100%);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 50px 40px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo h3 {
+            font-size: 1.8em;
+            margin: 0;
+            color: #fff;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-logo h3:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        /* Footer Sections */
+        .footer-sections {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .footer-section {
+            margin: 10px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h4:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section li {
+            margin: 10px 0;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .footer-section a:before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: #f90;
+        }
+
+        .footer-section a:hover {
+            color: #f90;
+            padding-left: 20px;
+        }
+
+        /* Newsletter Section */
+        .footer-newsletter {
+            text-align: left;
+            margin-top: 20px;
+            max-width: 350px;
+        }
+
+        .footer-newsletter h4 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: left;
+            color: #fff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-newsletter h4:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .newsletter-form label {
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .newsletter-input-group {
+            display: flex;
+            width: 100%;
+        }
+
+        .newsletter-form input {
+            padding: 12px 15px;
+            border-radius: 4px 0 0 4px;
+            border: 1px solid #444;
+            background-color: #292929;
+            color: #fff;
+            outline: none;
+            font-size: 1em;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form input:focus {
+            border-color: #f90;
+            box-shadow: 0 0 5px rgba(255,153,0,0.3);
+        }
+
+        .newsletter-form button {
+            background: linear-gradient(to right, #f90, #ff7e00);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background: linear-gradient(to right, #ff7e00, #f90);
+        }
+
+        /* Social Icons */
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons .icon {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: #292929;
+        }
+
+        .social-icons .icon:hover {
+            color: #fff;
+            background-color: #f90;
+            transform: translateY(-3px);
+        }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            text-align: center;
+            background: #1a1a1a;
+            padding: 15px;
+            font-size: 0.9em;
+        }
+
+        .footer-bottom a {
+            color: #ccc;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-bottom a:hover {
+            color: #f90;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            header {
+                padding: 0 15px;
+            }
+            
+            .search-bar input[type="text"] {
+                width: 150px;
+            }
+            
+            header .nav-links li {
+                margin: 0 10px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px 15px;
+            }
+            
+            .search-bar {
+                order: 3;
+                margin: 10px 0;
+                width: 100%;
+            }
+            
+            .search-bar form {
+                width: 100%;
+                display: flex;
+            }
+            
+            .search-bar input[type="text"] {
+                flex: 1;
+            }
+            
+            .user-dropdown {
+                margin-left: auto;
+                margin-right: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header .nav-links {
+                order: 4;
+                width: 100%;
+                justify-content: center;
+                margin: 10px 0;
+            }
+
+            .hero-content {
+                left: 5%;
+                max-width: 90%;
+            }
+
+            .hero-content h1 {
+                font-size: 2em;
+            }
+
+            .hero-content p {
+                font-size: 1em;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-sections {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .footer-section h4:after,
+            .footer-logo h3:after,
+            .footer-newsletter h4:after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .footer-section a {
+                padding-left: 0;
+            }
+            
+            .footer-section a:before {
+                display: none;
+            }
+            
+            .footer-newsletter {
+                text-align: center;
+                margin: 20px auto;
+            }
+
+            .newsletter-form {
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/Dashboard">Car<span>Dealings</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/Dashboard">Home</a></li>
+            <li><a href="/cars">Car Listings</a></li>
+            <li><a href="/dealers-list">Dealers</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a th:href="@{/view-purchase(email=${email})}">View Purchase</a></li>
+        </ul>
+        <div class="search-bar">
+            <form action="/cars/search" method="get">
+                <input type="text" name="query" placeholder="Search for cars..." />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="user-dropdown">
+            <div class="dropdown-toggle" onclick="toggleDropdown()">
+                <i class="fas fa-user-circle"></i>
+                <span th:text="${email}">bhorraj9970@gmail.com</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </header>
+    <div class="content">
+        <div class="contact-container fade-in-up">
+            <div class="bg-pattern"></div>
+            <div class="contact-image">
+                <img src="images/contact.png" alt="Contact Image">
+            </div>
+            <div class="contact-form">
+                <h2>Get in touch</h2>
+                <form action="/contact/submit" method="POST">
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name="name" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-comment-alt"></i>
+                        <textarea name="message" placeholder="Message" required></textarea>
+                    </div>
+                    <button type="submit">
+                        <i class="fas fa-paper-plane"></i>Send
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+        <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>CarDealings</h3>
+            </div>
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h4>Buy</h4>
+                    <ul>
+                        <li><a href="/cars/suvs">Sedan</a></li>
+                        <li><a href="/cars/sedans">SUV</a></li>
+                        <li><a href="/cars/hatchbacks">Hatchback</a></li>
+                        <li><a href="/cars">All Types</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contacts</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Stay Updated</h4>
+                <form action="/subscribe" method="post" class="newsletter-form">
+                    <label for="email">Subscribe to the newsletter</label>
+                    <div class="newsletter-input-group">
+                        <input id="email" type="email" name="email" placeholder="E-mail">
+                        <button type="submit">&#8594;</button>
+                    </div>
+                </form>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com" target="_blank" class="icon">Facebook</a>
+                    <a href="https://www.instagram.com" target="_blank" class="icon">Instagram</a>
+                    <a href="https://www.whatsapp.com" target="_blank" class="icon">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CarDealings. All rights reserved.</p>
+            <p>
+                <a href="#">Terms of use</a> | 
+                <a href="#">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus effect - highlight the active input
+            const formElements = document.querySelectorAll('input, textarea');
+            
+            formElements.forEach(element => {
+                element.addEventListener('focus', function() {
+                    this.parentElement.style.borderColor = '#6c63ff';
+                });
+                
+                element.addEventListener('blur', function() {
+                    this.parentElement.style.borderColor = '';
+                });
+            });
+        });
+        
+        // Toggle user dropdown
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('.dropdown-toggle') && 
+                !event.target.matches('.dropdown-toggle *')) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+    
+
+    </script>
+</body>
+</html>

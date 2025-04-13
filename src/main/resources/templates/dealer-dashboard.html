@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="navbar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dealer Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 2rem;
+        }
+
+        .container {
+            margin-top: 130px;
+            width: 80%;
+            margin-left: 120px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .dealer-info {
+            margin-bottom: 20px;
+        }
+
+        .dealer-info p {
+            font-size: 1.2rem;
+            margin: 8px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f90;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        header {
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        header .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8em;
+        }
+
+        header .logo span {
+            font-weight: bold;
+            color: #f90;
+        }
+
+        header .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        header .nav-links li {
+            margin: 0 15px;
+        }
+
+        header .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+
+        header .nav-links a:hover {
+            color: #f90;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+        }
+
+        .search-bar button {
+            padding: 5px 15px;
+            border: none;
+            background: #f90;
+            color: #fff;
+            font-size: 1em;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background: #e68a00;
+        }
+
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+            color: #fff;
+        }
+
+        .navbar-nav .nav-item {
+            margin: 0 10px;
+            font-size: 1em;
+        }
+
+        .navbar-nav .nav-item span {
+            font-weight: bold;
+            color: #f90;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+            margin-left: 15px;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #f90;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: white;
+            background-color: #ff9800;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 20px 120px;
+        }
+
+        .btn-primary:hover {
+            background-color: #e68a00;
+        }
+
+        @media (max-width: 768px) {
+            header .nav-links {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .navbar-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .btn-primary {
+                margin: 20px auto;
+                display: block;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/Dashboard">Car<span>Dealings</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a th:href="@{/{dealerId}/cars(dealerId=${dealer.id})}">Car Listings</a></li>
+            <li><a th:href="@{/{dealerId}/add-car(dealerId=${dealer.id})}">Add New Cars</a></li>
+            <li><a href="/manage-customers">Add & Update Customers</a></li>
+            <li><a th:href="@{/{dealerId}/profile(dealerId=${dealer.id})}">Dealers Profile</a></li>
+        </ul>
+        <div class="search-bar">
+            <form action="/cars/search" method="get">
+                <input type="text" name="query" placeholder="Search for cars..." />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                Welcome <span th:text="${dealer.name}">Dealer Name</span>
+            </li>
+           <!--  <li class="nav-item">
+                <a href="/dealers/login" class="nav-link">Logout</a>
+            </li> -->
+        </ul>
+    </header>
+
+    
+    <div class="container">
+        <!-- Display the dealer's name -->
+        <h1>Welcome, <span th:text="${dealer.name}">Dealer Name</span></h1>
+        
+        <!-- Display other dealer details -->
+        <div class="dealer-info">
+            <p><strong>Address:</strong> <span th:text="${dealer.address}">Dealer Address</span></p>
+            <p><strong>Phone Number:</strong> <span th:text="${dealer.phoneNumber}">Dealer Phone Number</span></p>
+            <p><strong>City:</strong> <span th:text="${dealer.city}">Dealer City</span></p>
+            <p><strong>State:</strong> <span th:text="${dealer.state}">Dealer State</span></p>
+            <p><strong>Country:</strong> <span th:text="${dealer.country}">Dealer Country</span></p>
+            <p><strong>Pincode:</strong> <span th:text="${dealer.pincode}">Dealer Pincode</span></p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>Pincode</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td th:text="${dealer.name}">Name</td>
+                    <td th:text="${dealer.address}">Address</td>
+                    <td th:text="${dealer.phoneNumber}">Phone Number</td>
+                    <td th:text="${dealer.city}">City</td>
+                    <td th:text="${dealer.state}">State</td>
+                    <td th:text="${dealer.country}">Country</td>
+                    <td th:text="${dealer.pincode}">Pincode</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Button outside the container -->
+    <a th:href="@{/{dealerId}/test-drive-bookings(dealerId=${dealer.id})}" class="btn-primary">
+        View Test Drive Bookings
+    </a>
+    
+</body>
+</html>

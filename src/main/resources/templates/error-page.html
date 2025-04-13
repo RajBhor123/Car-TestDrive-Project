@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>No Purchases Found</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+	<div th:insert="navbar :: navbar"></div>
+    <h1>No Purchases Found</h1>
+    <p>We could not find any purchase details for the provided email address.</p>
+    <a href="/Dashboard" class="btn">Back to Home</a>
+</body>
+</html>

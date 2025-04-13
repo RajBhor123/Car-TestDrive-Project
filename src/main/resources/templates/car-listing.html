@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Car Listings</title>
+</head>
+<body>
+    <h1>Car Listings</h1>
+    <div class="car-grid" th:if="${cars.size() > 0}">
+        <div class="car-card" th:each="car : ${cars}">
+            <img th:src="@{/images/{car.image}(car.image=${car.image})}" alt="Car Image">
+            <h3 th:text="${car.name}">Car Name</h3>
+            <p th:text="'Price: ' + ${car.price}">Price: ₹0</p>
+            <a th:href="@{/cars/{id}(id=${car.id})}" class="btn">View Details</a>
+        </div>
+    </div>
+    <p th:if="${cars.size() == 0}">No cars found for this category.</p>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        p strong {
+            color: #333;
+        }
+
+        form {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        button {
+            background-color: #ff9800; /* Updated background color */
+            color: white;
+            padding: 15px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%; /* Set width to 100% */
+        }
+
+        button:hover {
+            background-color: #e68a00;
+        }
+
+        button:active {
+            background-color: #cc7a00;
+        }
+
+        .btn-back {
+            display: inline-block;
+            background-color: #ff9800;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1em;
+            text-align: center;
+            margin-top: 30px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #e68a00;
+        }
+
+        .btn-back:active {
+            background-color: #cc7a00;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar inclusion -->
+    <div th:insert="navbar :: navbar"></div>
+
+    <div class="container">
+        <h1>Confirm Booking</h1>
+
+        <h2>Dealer Details</h2>
+        <p><strong>Name:</strong> <span th:text="${dealer.name}"></span></p>
+        <p><strong>Address:</strong> <span th:text="${dealer.address}"></span></p>
+        <p><strong>Phone:</strong> <span th:text="${dealer.phoneNumber}"></span></p>
+
+        <h2>Car Details</h2>
+        <p><strong>Name:</strong> <span th:text="${car.name}"></span></p>
+        <p><strong>Price:</strong> ₹<span th:text="${car.price}"></span></p>
+        <p><strong>Mileage:</strong> <span th:text="${car.mileage}"></span> km/l</p>
+
+        <form th:action="@{/dealers/process-payment}" method="post">
+            <input type="hidden" name="dealerId" th:value="${dealer.id}" />
+            <input type="hidden" name="carId" th:value="${car.id}" />
+
+            <label for="date">Select Test Drive Date:</label>
+            <input type="date" id="date" name="date" required />
+
+            <button type="submit">Pay ₹100</button>
+        </form>
+
+        <!-- Back Button -->
+        <a href="/dealers/location-select" th:href="@{/dealers/location-select(carId=${car.id})}" class="btn-back">Back to Select City</a>
+    </div>
+
+    <!-- Footer inclusion -->
+    <div th:insert="footer :: footer"></div>
+
+</body>
+</html>

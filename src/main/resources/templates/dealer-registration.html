@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dealer Registration</title>
+    <link rel="stylesheet" href="registration-styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('/images/bg.png') no-repeat;
+            background-size: cover;
+        }
+
+        .container {
+            width: 600px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 20px 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: #333;
+        }
+
+        .container h1 {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2e7d32;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            border: 2px solid #c8e6c9;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            background-color: white;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 5px #4caf50;
+        }
+
+        .button {
+            width: 100%;
+            height: 45px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4caf50;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #2e7d32;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="/dealers/register" method="POST">
+            <h1>Dealer Registration</h1>
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="dealerName">Dealer Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" placeholder="Enter your address" required>
+                </div>
+
+               <div class="input-group">
+    			<label for="phoneNumber">Phone Number</label>
+    			<input type="number" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number" required>
+			</div>
+
+                <div class="input-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" placeholder="Enter your city" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" name="state" placeholder="Enter your state" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="country">Country</label>
+                    <input type="text" id="country" name="country" placeholder="Enter your country" required>
+                </div>
+
+               <div class="input-group">
+   					 <label for="pincode">Pincode</label>
+   					 <input type="number" id="pincode" name="pincode" placeholder="Enter your pincode" required>
+				</div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a password" required>
+                </div>
+            </div>
+
+            <button class="button" type="submit">Register</button>
+
+            <div class="register-link">
+                <p>Already have an Account? <a href="/dealers/login">Login</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

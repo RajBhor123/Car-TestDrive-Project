@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Drive Payment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+
+        /* Updated Navbar Styling - One line layout */
+        header {
+            background: linear-gradient(135deg, #333 0%, #222 100%);
+            color: #fff;
+            padding: 0 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 70px; /* Fixed height for navbar */
+        }
+
+        header .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        header .logo a:hover {
+            text-shadow: 0 0 10px rgba(255,153,0,0.7);
+        }
+
+        header .logo span {
+            font-weight: bold;
+            color: #f90;
+        }
+
+        header .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        header .nav-links li {
+            margin: 0 15px;
+        }
+
+        header .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        header .nav-links a:hover {
+            color: #f90;
+        }
+
+        header .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        header .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+        }
+
+        .search-bar form {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            width: 180px;
+            transition: all 0.3s ease;
+            margin: 0;
+            height: 20px;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #f90;
+            box-shadow: 0 0 5px rgba(255,153,0,0.3);
+        }
+
+        .search-bar button {
+            padding: 8px 16px;
+            border: none;
+            background: linear-gradient(to right, #f90, #ff7e00);
+            color: #fff;
+            font-size: 1em;
+            font-weight: 500;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            height: 36px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar button:hover {
+            background: linear-gradient(to right, #ff7e00, #f90);
+            box-shadow: 0 0 10px rgba(255,153,0,0.5);
+        }
+        
+        /* Styling for user dropdown */
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            font-size: 0.95em;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-toggle:hover {
+            background-color: rgba(255, 153, 0, 0.3);
+        }
+
+        .dropdown-toggle span {
+            font-weight: bold;
+            color: #f90;
+            margin: 0 5px;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-toggle i {
+            margin-left: 5px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            min-width: 120px;
+            z-index: 1001;
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f5f5f5;
+            color: #f90;
+        }
+
+        .dropdown-menu a i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+        
+        /* Enhanced Payment Container */
+        .payment-container {
+            width: 80%;
+            max-width: 600px;
+            margin: 60px auto 150px;
+            padding: 30px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #f90, #ff7e00);
+        }
+
+        .payment-container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 1.8em;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .payment-container h1:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background-color: #f90;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .payment-form {
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .payment-container label {
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: block;
+            color: #555;
+            font-size: 1em;
+        }
+
+        .payment-container select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            font-size: 1em;
+            color: #333;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+            padding-right: 40px;
+        }
+
+        .payment-container select:focus {
+            border-color: #f90;
+            box-shadow: 0 0 0 2px rgba(255, 153, 0, 0.2);
+            outline: none;
+        }
+
+        .payment-amount {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            border-left: 4px solid #f90;
+        }
+
+        .payment-amount p {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .payment-amount span {
+            color: #f90;
+            font-size: 1.4em;
+        }
+
+        .payment-container button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 6px;
+            background: linear-gradient(to right, #f90, #ff7e00);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 153, 0, 0.3);
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-container button:hover {
+            background: linear-gradient(to right, #ff7e00, #f90);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 153, 0, 0.4);
+        }
+
+        .payment-container button:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .payment-container button:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+
+        .payment-footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .payment-secure {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .payment-secure i {
+            margin-right: 10px;
+            color: #2ecc71;
+        }
+
+        /* Footer - Enhanced */
+        footer {
+            background: linear-gradient(135deg, #333 0%, #222 100%);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 50px 40px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo h3 {
+            font-size: 1.8em;
+            margin: 0;
+            color: #fff;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-logo h3:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        /* Footer Sections */
+        .footer-sections {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .footer-section {
+            margin: 10px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h4:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section li {
+            margin: 10px 0;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .footer-section a:before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: #f90;
+        }
+
+        .footer-section a:hover {
+            color: #f90;
+            padding-left: 20px;
+        }
+
+        /* Newsletter Section */
+        .footer-newsletter {
+            text-align: left;
+            margin-top: 20px;
+            max-width: 350px;
+        }
+
+        .footer-newsletter h4 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: left;
+            color: #fff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-newsletter h4:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .newsletter-form label {
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .newsletter-input-group {
+            display: flex;
+            width: 100%;
+        }
+
+        .newsletter-form input {
+            padding: 12px 15px;
+            border-radius: 4px 0 0 4px;
+            border: 1px solid #444;
+            background-color: #292929;
+            color: #fff;
+            outline: none;
+            font-size: 1em;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form input:focus {
+            border-color: #f90;
+            box-shadow: 0 0 5px rgba(255,153,0,0.3);
+        }
+
+        .newsletter-form button {
+            background: linear-gradient(to right, #f90, #ff7e00);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background: linear-gradient(to right, #ff7e00, #f90);
+        }
+
+        /* Social Icons */
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons .icon {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: #292929;
+        }
+
+        .social-icons .icon:hover {
+            color: #fff;
+            background-color: #f90;
+            transform: translateY(-3px);
+        }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            text-align: center;
+            background: #1a1a1a;
+            padding: 15px;
+            font-size: 0.9em;
+        }
+
+        .footer-bottom a {
+            color: #ccc;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-bottom a:hover {
+            color: #f90;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            header {
+                padding: 0 15px;
+            }
+            
+            .search-bar input[type="text"] {
+                width: 150px;
+            }
+            
+            header .nav-links li {
+                margin: 0 10px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px 15px;
+            }
+            
+            .search-bar {
+                order: 3;
+                margin: 10px 0;
+                width: 100%;
+            }
+            
+            .search-bar form {
+                width: 100%;
+                display: flex;
+            }
+            
+            .search-bar input[type="text"] {
+                flex: 1;
+            }
+            
+            .user-dropdown {
+                margin-left: auto;
+                margin-right: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header .nav-links {
+                order: 4;
+                width: 100%;
+                justify-content: center;
+                margin: 10px 0;
+            }
+
+            .payment-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-sections {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .footer-section h4:after,
+            .footer-logo h3:after,
+            .footer-newsletter h4:after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .footer-section a {
+                padding-left: 0;
+            }
+            
+            .footer-section a:before {
+                display: none;
+            }
+            
+            .footer-newsletter {
+                text-align: center;
+                margin: 20px auto;
+            }
+
+            .newsletter-form {
+                align-items: center;
+            }
+        }
+    </style>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>  <!-- Razorpay SDK -->
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/Dashboard">Car<span>Dealings</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/Dashboard">Home</a></li>
+            <li><a href="/cars">Car Listings</a></li>
+            <li><a href="/dealers-list">Dealers</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a th:href="@{/view-purchase(email=${email})}">View Purchase</a></li>
+        </ul>
+        <div class="search-bar">
+            <form action="/cars/search" method="get">
+                <input type="text" name="query" placeholder="Search for cars..." />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="user-dropdown">
+            <div class="dropdown-toggle" onclick="toggleDropdown()">
+                <i class="fas fa-user-circle"></i>
+                <span th:text="${booking.userEmail}" title="${booking.userEmail}">Guest</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="payment-container">
+        <h1>Payment for Test Drive</h1>
+        
+        <input type="hidden" id="bookingId" th:value="${bookingId}" />
+        <input type="hidden" id="amount" value="100" />
+        
+        <div class="payment-amount">
+            <p>Amount to pay: <span>Rs. 100</span></p>
+        </div>
+        
+        <div class="payment-form">
+            <div class="form-group">
+                <label for="paymentMode">Select Payment Mode:</label>
+                <select id="paymentMode" required>
+                    <option value="NetBanking">Net Banking</option>
+                    <option value="UPI">UPI</option>
+                </select>
+            </div>
+            
+            <button id="pay-button">
+                <i class="fas fa-credit-card"></i> Proceed to Payment
+            </button>
+        </div>
+        
+        <div class="payment-footer">
+            <div class="payment-secure">
+                <i class="fas fa-lock"></i> Your payment information is secure.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>CarDealings</h3>
+            </div>
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h4>Buy</h4>
+                    <ul>
+                        <li><a href="/cars/suvs">Sedan</a></li>
+                        <li><a href="/cars/sedans">SUV</a></li>
+                        <li><a href="/cars/hatchbacks">Hatchback</a></li>
+                        <li><a href="/cars">All Types</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contacts</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Stay Updated</h4>
+                <form action="/subscribe" method="post" class="newsletter-form">
+                    <label for="email">Subscribe to the newsletter</label>
+                    <div class="newsletter-input-group">
+                        <input id="email" type="email" name="email" placeholder="E-mail">
+                        <button type="submit">&#8594;</button>
+                    </div>
+                </form>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com" target="_blank" class="icon">Facebook</a>
+                    <a href="https://www.instagram.com" target="_blank" class="icon">Instagram</a>
+                    <a href="https://www.whatsapp.com" target="_blank" class="icon">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CarDealings. All rights reserved.</p>
+            <p>
+                <a href="#">Terms of use</a> | 
+                <a href="#">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+
+    <script th:inline="javascript">
+        var userEmail = /*[[${session.loggedInUserEmail}]]*/ "guest@example.com";
+
+        document.getElementById('pay-button').addEventListener('click', async function() {
+            const amount = document.getElementById('amount').value;
+            const bookingId = document.getElementById('bookingId').value;
+            const modeOfPayment = document.getElementById('paymentMode').value;
+
+            if (!bookingId) {
+                alert("Booking ID is missing!");
+                return;
+            }
+
+            // Call backend to create order
+            let response = await fetch('/payments/create-order?amount=' + amount, { method: 'POST' });
+            let order = await response.json();
+
+            var options = {
+                "key": "rzp_test_M2tFx24BuEeDZe",
+                "amount": order.amount,
+                "currency": "INR",
+                "name": "Car Store",
+                "description": "Test Drive Payment",
+                "order_id": order.id,
+                "handler": function(response) {
+                    alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+
+                    fetch('/payments/process', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            bookingId: bookingId,
+                            paymentId: response.razorpay_payment_id,
+                            orderId: order.id,
+                            modeOfPayment: modeOfPayment,
+                            status: "success"
+                        })
+                    }).then(() => {
+                        alert("Payment confirmed!");
+                        window.location.href = "/payments/confirmation?bookingId=" + bookingId;
+                    }).catch(error => console.error("Payment confirmation failed:", error));
+                },
+                "prefill": {
+                    "email": userEmail || "guest@example.com"
+                },
+                "theme": {
+                    "color": "#ff9800"
+                }
+            };
+
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+        });
+        
+        // Toggle user dropdown
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('.dropdown-toggle') && 
+                !event.target.matches('.dropdown-toggle *')) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

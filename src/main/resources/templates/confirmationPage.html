@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Drive Confirmation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <style>
+        /* General Styling */
+        body {
+            margin: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+        }
+
+        /* Updated Navbar Styling - One line layout */
+        header {
+            background: linear-gradient(135deg, #333 0%, #222 100%);
+            color: #fff;
+            padding: 0 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 70px; /* Fixed height for navbar */
+        }
+
+        header .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        header .logo a:hover {
+            text-shadow: 0 0 10px rgba(255,153,0,0.7);
+        }
+
+        header .logo span {
+            font-weight: bold;
+            color: #f90;
+        }
+
+        header .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        header .nav-links li {
+            margin: 0 15px;
+        }
+
+        header .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        header .nav-links a:hover {
+            color: #f90;
+        }
+
+        header .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        header .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+        }
+
+        .search-bar form {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            width: 180px;
+            transition: all 0.3s ease;
+            margin: 0;
+            height: 20px;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #f90;
+            box-shadow: 0 0 5px rgba(255,153,0,0.3);
+        }
+
+        .search-bar button {
+            padding: 8px 16px;
+            border: none;
+            background: linear-gradient(to right, #f90, #ff7e00);
+            color: #fff;
+            font-size: 1em;
+            font-weight: 500;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            height: 36px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar button:hover {
+            background: linear-gradient(to right, #ff7e00, #f90);
+            box-shadow: 0 0 10px rgba(255,153,0,0.5);
+        }
+        
+        /* Styling for user dropdown */
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            font-size: 0.95em;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-toggle:hover {
+            background-color: rgba(255, 153, 0, 0.3);
+        }
+
+        .dropdown-toggle span {
+            font-weight: bold;
+            color: #f90;
+            margin: 0 5px;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-toggle i {
+            margin-left: 5px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            min-width: 120px;
+            z-index: 1001;
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f5f5f5;
+            color: #f90;
+        }
+
+        .dropdown-menu a i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* Payment Page Container Styles */
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .container:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            font-size: 28px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 3px;
+            background-color: #4CAF50;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        h2 {
+            color: #333;
+            font-size: 22px;
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f5f5f5;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+
+        strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .car-info, .payment-info {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .car-info p, .payment-info p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        img.car-image {
+            margin: 25px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        img.car-image:hover {
+            transform: scale(1.02);
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #ff9800;
+        }
+
+        .confirmation-footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 15px;
+            color: #777;
+        }
+
+        .back-home {
+            display: block;
+            margin: 35px auto 15px;
+            padding: 12px 30px;
+            background: linear-gradient(to right, #4CAF50, #3e8e41);
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            max-width: 200px;
+            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+        }
+        
+        .back-home:hover {
+            background: linear-gradient(to right, #3e8e41, #4CAF50);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        /* Footer - Enhanced */
+        footer {
+            background: linear-gradient(135deg, #333 0%, #222 100%);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 50px 40px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo h3 {
+            font-size: 1.8em;
+            margin: 0;
+            color: #fff;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-logo h3:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        /* Footer Sections */
+        .footer-sections {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .footer-section {
+            margin: 10px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h4:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section li {
+            margin: 10px 0;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .footer-section a:before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: #f90;
+        }
+
+        .footer-section a:hover {
+            color: #f90;
+            padding-left: 20px;
+        }
+
+        /* Newsletter Section */
+        .footer-newsletter {
+            text-align: left;
+            margin-top: 20px;
+            max-width: 350px;
+        }
+
+        .footer-newsletter h4 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: left;
+            color: #fff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-newsletter h4:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .newsletter-form label {
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .newsletter-input-group {
+            display: flex;
+            width: 100%;
+        }
+
+        .newsletter-form input {
+            padding: 12px 15px;
+            border-radius: 4px 0 0 4px;
+            border: 1px solid #444;
+            background-color: #292929;
+            color: #fff;
+            outline: none;
+            font-size: 1em;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form input:focus {
+            border-color: #f90;
+            box-shadow: 0 0 5px rgba(255,153,0,0.3);
+        }
+
+        .newsletter-form button {
+            background: linear-gradient(to right, #f90, #ff7e00);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background: linear-gradient(to right, #ff7e00, #f90);
+        }
+
+        /* Social Icons */
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons .icon {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: #292929;
+        }
+
+        .social-icons .icon:hover {
+            color: #fff;
+            background-color: #f90;
+            transform: translateY(-3px);
+        }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            text-align: center;
+            background: #1a1a1a;
+            padding: 15px;
+            font-size: 0.9em;
+        }
+
+        .footer-bottom a {
+            color: #ccc;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-bottom a:hover {
+            color: #f90;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            header {
+                padding: 0 15px;
+            }
+            
+            .search-bar input[type="text"] {
+                width: 150px;
+            }
+            
+            header .nav-links li {
+                margin: 0 10px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px 15px;
+            }
+            
+            .search-bar {
+                order: 3;
+                margin: 10px 0;
+                width: 100%;
+            }
+            
+            .search-bar form {
+                width: 100%;
+                display: flex;
+            }
+            
+            .search-bar input[type="text"] {
+                flex: 1;
+            }
+            
+            .user-dropdown {
+                margin-left: auto;
+                margin-right: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header .nav-links {
+                order: 4;
+                width: 100%;
+                justify-content: center;
+                margin: 10px 0;
+            }
+
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-sections {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .footer-section h4:after,
+            .footer-logo h3:after,
+            .footer-newsletter h4:after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .footer-section a {
+                padding-left: 0;
+            }
+            
+            .footer-section a:before {
+                display: none;
+            }
+            
+            .footer-newsletter {
+                text-align: center;
+                margin: 20px auto;
+            }
+
+            .newsletter-form {
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/Dashboard">Car<span>Dealings</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/Dashboard">Home</a></li>
+            <li><a href="/cars">Car Listings</a></li>
+            <li><a href="/dealers-list">Dealers</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a th:href="@{/view-purchase(email=${email})}">View Purchase</a></li>
+        </ul>
+        <div class="search-bar">
+            <form action="/cars/search" method="get">
+                <input type="text" name="query" placeholder="Search for cars..." />
+                <button type="submit"><i class="fas fa-search"></i> Search</button>
+            </form>
+        </div>
+        <div class="user-dropdown">
+            <div class="dropdown-toggle" onclick="toggleDropdown()">
+                <i class="fas fa-user-circle"></i>
+                <span th:text="${testDrive != null && testDrive.user != null ? testDrive.user.email : 'Guest'}" title="${email}">Guest</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Confirmation Content -->
+    <div class="container">
+        <h1>Test Drive Confirmed</h1>
+        <p>Your test drive for the car <strong th:text="${car.name}"></strong> has been successfully booked.</p>
+        <p>Test Drive Date: <span th:text="${testDrive.testDriveDate}" class="highlight"></span></p>
+        <p>Dealer: <span th:text="${testDrive.dealer.name}" class="highlight"></span></p>
+
+        <h2>Car Information</h2>
+        <div class="car-info">
+            <p><strong>Car Name:</strong> <span th:text="${car.name}"></span></p>
+            <p><strong>Car Type:</strong> <span th:text="${car.type}"></span></p>
+            <p><strong>Price:</strong> Rs. <span th:text="${car.price}" class="highlight"></span></p>
+            <p><strong>Mileage:</strong> <span th:text="${car.mileage}"></span></p>
+            <p><strong>Engine Specs:</strong> <span th:text="${car.engineSpecs}"></span></p>
+        </div>
+
+        <img th:src="@{'/images/' + ${car.imagePath}}" alt="Car Image" class="car-image">
+
+        <h2>Payment Information</h2>
+        <div class="payment-info" th:if="${payment != null}">
+            <p><strong>Payment Status:</strong> <span th:text="${payment.status}" class="highlight"></span></p>
+            <p><strong>Payment Amount:</strong> Rs. <span th:text="${payment.amount}" class="highlight"></span></p>
+            <p><strong>Payment Mode:</strong> <span th:text="${payment.modeOfPayment}"></span></p>
+        </div>
+
+        <p class="confirmation-footer">A confirmation email has been sent to you!</p>
+
+        <!-- Back to Home Button -->
+        <a href="/Dashboard" class="back-home">Back to Home</a>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>CarDealings</h3>
+            </div>
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h4>Buy</h4>
+                    <ul>
+                        <li><a href="/cars/suvs">Sedan</a></li>
+                        <li><a href="/cars/sedans">SUV</a></li>
+                        <li><a href="/cars/hatchbacks">Hatchback</a></li>
+                        <li><a href="/cars">All Types</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contacts</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Stay Updated</h4>
+                <form action="/subscribe" method="post" class="newsletter-form">
+                    <label for="email">Subscribe to the newsletter</label>
+                    <div class="newsletter-input-group">
+                        <input id="email" type="email" name="email" placeholder="E-mail">
+                        <button type="submit">&#8594;</button>
+                    </div>
+                </form>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com" target="_blank" class="icon">Facebook</a>
+                    <a href="https://www.instagram.com" target="_blank" class="icon">Instagram</a>
+                    <a href="https://www.whatsapp.com" target="_blank" class="icon">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CarDealings. All rights reserved.</p>
+            <p>
+                <a href="#">Terms of use</a> | 
+                <a href="#">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // Toggle user dropdown
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('.dropdown-toggle') && 
+                !event.target.matches('.dropdown-toggle *')) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

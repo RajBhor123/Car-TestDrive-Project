@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Drive Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        p {
+            margin: 10px 0;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        p strong {
+            color: #333;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        /* Add styling to the navbar if applicable */
+        .navbar {
+            background-color: #333;
+            padding: 10px;
+            color: white;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<!-- Navbar inclusion -->
+    <!-- Navbar inclusion -->
+    <div th:insert="navbar :: navbar"></div>
+
+    <div class="container">
+        <h1>Test Drive Confirmed!</h1>
+
+        <h2>Car Details</h2>
+        <p><strong>Name:</strong> <span th:text="${car.name}"></span></p>
+        <p><strong>Price:</strong> ₹<span th:text="${car.price}"></span></p>
+        <p><strong>Mileage:</strong> <span th:text="${car.mileage}"></span> km/l</p>
+
+        <h2>Dealer Details</h2>
+        <p><strong>Name:</strong> <span th:text="${dealer.name}"></span></p>
+        <p><strong>Address:</strong> <span th:text="${dealer.address}"></span></p>
+        <p><strong>Phone:</strong> <span th:text="${dealer.phoneNumber}"></span></p>
+
+        <h2>Test Drive Details</h2>
+        <p><strong>Date:</strong> <span th:text="${date}"></span></p>
+    </div>
+
+    <!-- Footer inclusion -->
+    <div th:insert="footer :: footer"></div>
+
+</body>
+</html>

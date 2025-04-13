@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<title>Purchase Details</title>
+	<style>
+		body {
+		    font-family: 'Montserrat', Arial, sans-serif;
+		    margin: 0;
+		    padding: 0;
+		    background-color: #f4f4f4;
+		    color: #333;
+		    line-height: 1.6;
+		}
+		 /* Updated Navbar Styling - One line layout */
+        header {
+            background: linear-gradient(135deg, #333 0%, #222 100%);
+            color: #fff;
+            padding: 0 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 70px; /* Fixed height for navbar */
+        }
+
+        header .logo a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.8em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        header .logo a:hover {
+            text-shadow: 0 0 10px rgba(255,153,0,0.7);
+        }
+
+        header .logo span {
+            font-weight: bold;
+            color: #f90;
+        }
+
+        header .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        header .nav-links li {
+            margin: 0 15px;
+        }
+
+        header .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        header .nav-links a:hover {
+            color: #f90;
+        }
+
+        header .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        header .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin: 0 15px;
+        }
+
+        .search-bar form {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            width: 180px;
+            transition: all 0.3s ease;
+            margin: 0;
+            height: 20px;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #f90;
+            box-shadow: 0 0 5px rgba(255,153,0,0.3);
+        }
+
+        .search-bar button {
+            padding: 8px 16px;
+            border: none;
+            background: linear-gradient(to right, #f90, #ff7e00);
+            color: #fff;
+            font-size: 1em;
+            font-weight: 500;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            height: 36px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar button:hover {
+            background: linear-gradient(to right, #ff7e00, #f90);
+            box-shadow: 0 0 10px rgba(255,153,0,0.5);
+        }
+        
+        /* Styling for user dropdown */
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            color: #fff;
+            font-size: 0.95em;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-toggle:hover {
+            background-color: rgba(255, 153, 0, 0.3);
+        }
+
+	        /* Update this CSS rule in the style section */
+		.dropdown-toggle span {
+		    font-weight: bold;
+		    color: #f90;
+		    margin: 0 5px;
+		    max-width: 250px; /* Increased significantly to fit longer email addresses */
+		    white-space: nowrap;
+		    overflow: visible; /* Changed from hidden to visible */
+		    text-overflow: clip; /* Changed from ellipsis to clip */
+		}
+	
+		/* You might also want to adjust the user-dropdown container */
+		.user-dropdown {
+		    position: relative;
+		    display: inline-block;
+		    margin-left: 15px;
+		    min-width: 200px; /* Add minimum width to ensure space */
+		}
+        .dropdown-toggle i {
+            margin-left: 5px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            min-width: 120px;
+            z-index: 1001;
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f5f5f5;
+            color: #f90;
+        }
+
+        .dropdown-menu a i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+		
+		.container {
+		    margin: 50px auto;
+		    padding: 40px;
+		    background-color: #fff;
+		    border-radius: 12px;
+		    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+		    max-width: 800px;
+		    transition: all 0.3s ease;
+		}
+		
+		.container:hover {
+		    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+		    transform: translateY(-5px);
+		}
+		
+		h1 {
+		    text-align: center;
+		    font-size: 2.2em;
+		    margin-bottom: 30px;
+		    color: #333;
+		    position: relative;
+		    padding-bottom: 15px;
+		}
+		
+		h1::after {
+		    content: "";
+		    position: absolute;
+		    bottom: 0;
+		    left: 50%;
+		    transform: translateX(-50%);
+		    width: 100px;
+		    height: 3px;
+		    background-color: #333;
+		    border-radius: 2px;
+		}
+		
+		.purchase-container {
+		    background-color: #f9f9f9;
+		    border-radius: 8px;
+		    padding: 25px;
+		    margin-bottom: 30px;
+		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+		    border-left: 5px solid #333;
+		}
+		
+		.detail {
+		    margin-bottom: 20px;
+		    font-size: 1.2em;
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    padding: 10px 0;
+		    border-bottom: 1px dashed #ddd;
+		}
+		
+		.detail:last-child {
+		    border-bottom: none;
+		}
+		
+		.detail label {
+		    font-weight: bold;
+		    font-size: 1.2em;
+		    color: #555;
+		}
+		
+		.detail span {
+		    background-color: #f0f0f0;
+		    padding: 8px 15px;
+		    border-radius: 20px;
+		    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+		    min-width: 150px;
+		    text-align: center;
+		}
+		
+		.suggestion {
+		    margin-top: 30px;
+		    padding: 20px;
+		    background-color: #e0ffe0;
+		    border: 1px solid #90ee90;
+		    color: #006400;
+		    border-radius: 10px;
+		    font-size: 1.1em;
+		    overflow: hidden;
+		    white-space: nowrap;
+		    position: relative;
+		    box-shadow: 0 3px 8px rgba(0, 100, 0, 0.1);
+		}
+		
+		.suggestion:before {
+		    content: "💡";
+		    margin-right: 10px;
+		    font-size: 1.3em;
+		}
+		
+		.marquee {
+		    display: inline-block;
+		    animation: scroll 15s linear infinite;
+		}
+		
+		@keyframes scroll {
+		    0% {
+		        transform: translateX(100%);
+		    }
+		    100% {
+		        transform: translateX(-100%);
+		    }
+		}
+		
+		.btn {
+		    display: inline-block;
+		    margin-top: 30px;
+		    padding: 14px 28px;
+		    background-color: #333;
+		    color: #fff;
+		    text-decoration: none;
+		    border-radius: 30px;
+		    text-align: center;
+		    font-size: 1.1em;
+		    font-weight: bold;
+		    letter-spacing: 1px;
+		    transition: all 0.3s ease;
+		    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		    position: relative;
+		    overflow: hidden;
+		    border: none;
+		    cursor: pointer;
+		    z-index: 1;
+		}
+		
+		.btn:hover {
+		    background-color: #555;
+		    transform: translateY(-3px);
+		    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+		}
+		
+		.btn:active {
+		    transform: translateY(1px);
+		    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+		
+		.btn::after {
+		    content: "";
+		    position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    width: 5px;
+		    height: 5px;
+		    background: rgba(255, 255, 255, 0.5);
+		    opacity: 0;
+		    border-radius: 100%;
+		    transform: scale(1, 1) translate(-50%);
+		    transform-origin: 50% 50%;
+		    z-index: -1;
+		}
+		
+		.btn:hover::after {
+		    animation: ripple 1s ease-out;
+		}
+		
+		@keyframes ripple {
+		    0% {
+		        transform: scale(0, 0);
+		        opacity: 0.5;
+		    }
+		    100% {
+		        transform: scale(20, 20);
+		        opacity: 0;
+		    }
+		}
+		
+		.btn-container {
+		    text-align: center;
+		}
+		
+		@media (max-width: 768px) {
+		    .container {
+		        margin: 30px 15px;
+		        padding: 25px;
+		    }
+		    
+		    .detail {
+		        flex-direction: column;
+		        align-items: flex-start;
+		    }
+		    
+		    .detail span {
+		        margin-top: 5px;
+		        width: 100%;
+		    }
+		    
+		    h1 {
+		        font-size: 1.8em;
+		    }
+		}
+		        /* Footer - Enhanced */
+        footer {
+            background: linear-gradient(135deg, #333 0%, #222 100%);
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 50px 40px;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo h3 {
+            font-size: 1.8em;
+            margin: 0;
+            color: #fff;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-logo h3:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        /* Footer Sections */
+        .footer-sections {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .footer-section {
+            margin: 10px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #fff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h4:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section li {
+            margin: 10px 0;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .footer-section a:before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: #f90;
+        }
+
+        .footer-section a:hover {
+            color: #f90;
+            padding-left: 20px;
+        }
+
+        /* Newsletter Section */
+        .footer-newsletter {
+            text-align: left;
+            margin-top: 20px;
+            max-width: 350px;
+        }
+
+        .footer-newsletter h4 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: left;
+            color: #fff;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-newsletter h4:after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 2px;
+            background-color: #f90;
+            bottom: 0;
+            left: 0;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .newsletter-form label {
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+
+        .newsletter-input-group {
+            display: flex;
+            width: 100%;
+        }
+
+        .newsletter-form input {
+            padding: 12px 15px;
+            border-radius: 4px 0 0 4px;
+            border: 1px solid #444;
+            background-color: #292929;
+            color: #fff;
+            outline: none;
+            font-size: 1em;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form input:focus {
+            border-color: #f90;
+            box-shadow: 0 0 5px rgba(255,153,0,0.3);
+        }
+
+        .newsletter-form button {
+            background: linear-gradient(to right, #f90, #ff7e00);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background: linear-gradient(to right, #ff7e00, #f90);
+        }
+
+        /* Social Icons */
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons .icon {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background-color: #292929;
+        }
+
+        .social-icons .icon:hover {
+            color: #fff;
+            background-color: #f90;
+            transform: translateY(-3px);
+        }
+
+        /* Footer Bottom */
+        .footer-bottom {
+            text-align: center;
+            background: #1a1a1a;
+            padding: 15px;
+            font-size: 0.9em;
+        }
+
+        .footer-bottom a {
+            color: #ccc;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-bottom a:hover {
+            color: #f90;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            header {
+                padding: 0 15px;
+            }
+            
+            .search-bar input[type="text"] {
+                width: 150px;
+            }
+            
+            header .nav-links li {
+                margin: 0 10px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 10px 15px;
+            }
+            
+            .search-bar {
+                order: 3;
+                margin: 10px 0;
+                width: 100%;
+            }
+            
+            .search-bar form {
+                width: 100%;
+                display: flex;
+            }
+            
+            .search-bar input[type="text"] {
+                flex: 1;
+            }
+            
+            .user-dropdown {
+                margin-left: auto;
+                margin-right: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header .nav-links {
+                order: 4;
+                width: 100%;
+                justify-content: center;
+                margin: 10px 0;
+            }
+
+            .hero-content {
+                left: 5%;
+                max-width: 90%;
+            }
+
+            .hero-content h1 {
+                font-size: 2em;
+            }
+
+            .hero-content p {
+                font-size: 1em;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-sections {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .footer-section h4:after,
+            .footer-logo h3:after,
+            .footer-newsletter h4:after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .footer-section a {
+                padding-left: 0;
+            }
+            
+            .footer-section a:before {
+                display: none;
+            }
+            
+            .footer-newsletter {
+                text-align: center;
+                margin: 20px auto;
+            }
+
+            .newsletter-form {
+                align-items: center;
+            }
+           }
+		
+		</style>
+  	 </head>
+		<body>
+			 <header>
+        <div class="logo">
+            <a href="/Dashboard">Car<span>Dealings</span></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/Dashboard">Home</a></li>
+            <li><a href="/cars">Car Listings</a></li>
+            <li><a href="/dealers-list">Dealers</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a th:href="@{/view-purchase(email=${email})}">View Purchase</a></li>
+        </ul>
+        <div class="search-bar">
+            <form action="/cars/search" method="get">
+                <input type="text" name="query" placeholder="Search for cars..." />
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="user-dropdown">
+            <div class="dropdown-toggle" onclick="toggleDropdown()">
+                <i class="fas fa-user-circle"></i>
+                <span th:text="${email}">bhorraj9970@gmail.com</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-menu" id="userDropdown">
+                <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+                <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </header>
+
+			<div class="container">
+			    <h1>Your Purchase Details</h1>
+			
+			    <div class="purchase-container" th:each="purchase : ${purchases}">
+			        <div class="detail">
+			            <label>Car Name:</label>
+			            <span th:text="${purchase.carName}">Car Name</span>
+			        </div>
+			        <div class="detail">
+			            <label>Car Type:</label>
+			            <span th:text="${purchase.carType}">Car Type</span>
+			        </div>
+			        <div class="detail">
+			            <label>Price:</label>
+			            <span th:text="${purchase.carPrice}">Price</span>
+			        </div>
+			        <div class="detail">
+			            <label>Payment Mode:</label>
+			            <span th:text="${purchase.paymentMode}">Payment Mode</span>
+			        </div>
+			        <div class="detail">
+			            <label>Delivery Date:</label>
+			            <span th:text="${purchase.deliveryDate}">Delivery Date</span>
+			        </div>
+			        <div class="detail">
+			            <label>Delivery Time:</label>
+			            <span th:text="${purchase.deliveryTime}">Delivery Time</span>
+			        </div>
+			    </div>
+			
+			    <div class="suggestion">
+			        <span class="marquee">Suggestion: Your car's first servicing is recommended after completing 10,000 km.</span>
+			    </div>
+			
+			    <div class="btn-container">
+			        <a href="/Dashboard" class="btn"> <i class="fas fa-home"></i>Back to Home</a>
+			    </div>
+			</div>
+			
+			<footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h3>CarDealings</h3>
+            </div>
+            <div class="footer-sections">
+                <div class="footer-section">
+                    <h4>Buy</h4>
+                    <ul>
+                        <li><a href="/cars/suvs">Sedan</a></li>
+                        <li><a href="/cars/sedans">SUV</a></li>
+                        <li><a href="/cars/hatchbacks">Hatchback</a></li>
+                        <li><a href="/cars">All Types</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contacts</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Stay Updated</h4>
+                <form action="/subscribe" method="post" class="newsletter-form">
+                    <label for="email">Subscribe to the newsletter</label>
+                    <div class="newsletter-input-group">
+                        <input id="email" type="email" name="email" placeholder="E-mail">
+                        <button type="submit">&#8594;</button>
+                    </div>
+                </form>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com" target="_blank" class="icon">Facebook</a>
+                    <a href="https://www.instagram.com" target="_blank" class="icon">Instagram</a>
+                    <a href="https://www.whatsapp.com" target="_blank" class="icon">WhatsApp</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 CarDealings. All rights reserved.</p>
+            <p>
+                <a href="#">Terms of use</a> | 
+                <a href="#">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+   </body> 
+    <script>
+				
+    // Toggle user dropdown
+    function toggleDropdown() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+    
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(event) {
+        if (!event.target.matches('.dropdown-toggle') && 
+            !event.target.matches('.dropdown-toggle *')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    });
+
+</script>
+
+</html>
